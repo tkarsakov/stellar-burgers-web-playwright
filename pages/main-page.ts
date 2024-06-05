@@ -1,23 +1,30 @@
 import { type Page, type Locator } from "@playwright/test";
+import { BasePage } from "./base-page";
 
-export class MainPage {
+export enum Section {
+  BUNS = "Булки",
+  SAUCES = "Соусы",
+  FILLINGS = "Начинки",
+}
+
+export class MainPage extends BasePage {
   readonly page: Page;
 
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
-  getConstructorSectionHeader(text: string) {
-    return this.page.locator(`xpath=//h2[text()="${text}"]`);
+  getConstructorSectionHeader(section: Section) {
+    return this.page.locator(`xpath=//h2[text()="${section}"]`);
   }
 
   async goto() {
     await this.page.goto("/");
   }
 
-  async clickConstructorSectionByText(text: string) {
+  async clickConstructorSectionByText(section: Section) {
     await this.page
-      .locator(`xpath=//span[text()="${text}"]/parent::div`)
+      .locator(`xpath=//span[text()="${section}"]/parent::div`)
       .click();
     await this.page.waitForTimeout(1500);
   }
